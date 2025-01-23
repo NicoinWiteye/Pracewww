@@ -6,7 +6,7 @@ class TicTacToe {
         this.currentPlayer = 'X';
         this.stats = { X: 0, O: 0 };
         this.gameOver = false;
-        this.startTime = null;
+        this.startTime = Date.now(); // Inicializace času hry
     }
 
     makeMove(row, col) {
@@ -41,7 +41,7 @@ class TicTacToe {
         this.board = Array.from({ length: this.size }, () => Array(this.size).fill(null));
         this.currentPlayer = 'X';
         this.gameOver = false;
-        this.startTime = null;
+        this.startTime = Date.now(); // Resetování času hry
     }
 
     saveGame() {
@@ -66,21 +66,22 @@ class TicTacToe {
             this.gameOver = gameState.gameOver;
             this.size = gameState.size;
             this.winCondition = gameState.winCondition;
-            this.startTime = gameState.startTime;
+            this.startTime = gameState.startTime || Date.now(); // Načtení času hry
         }
     }
-}
-class Scoreboard {
-    constructor() {
-        this.scores = JSON.parse(localStorage.getItem('ticTacToeScores')) || [];
-    }
 
-    addScore(score) {
-        this.scores.push(score);
-        localStorage.setItem('ticTacToeScores', JSON.stringify(this.scores));
-    }
-
-    getScores() {
-        return this.scores;
+    aiMove() {
+        const emptyCells = [];
+        for (let row = 0; row < this.size; row++) {
+            for (let col = 0; col < this.size; col++) {
+                if (!this.board[row][col]) {
+                    emptyCells.push({ row, col });
+                }
+            }
+        }
+        if (emptyCells.length > 0) {
+            const { row, col } = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+            this.makeMove(row, col);
+        }
     }
 }

@@ -3,6 +3,7 @@ class View {
         this.boardElement = document.getElementById('board');
         this.statsElement = document.getElementById('stats');
         this.resetButton = document.getElementById('reset');
+        this.scoreboardElement = document.getElementById('scoreboard');
     }
 
     async getGameSettings() {
@@ -41,5 +42,9 @@ class View {
 
     showMessage(message) {
         alert(message);
+    }
+
+    updateScoreboard(scores) {
+        this.scoreboardElement.innerHTML = scores.map(score => `Hráč: ${score.player}, Doba: ${score.duration} ms, Velikost: ${score.size}, Výhra: ${score.winCondition}`).join('<br>');
     }
 }
