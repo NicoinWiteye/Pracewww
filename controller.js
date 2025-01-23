@@ -18,11 +18,19 @@ class Controller {
         this.model = model;
         this.view = view;
         this.scoreboard = new Scoreboard();
+        this.isGameInProgress = false; // Track if a game is in progress
 
+        this.view.setResetHandler(this.handleReset.bind(this)); // Set reset handler
+        this.view.setCellClickHandler(this.handleCellClick.bind(this)); // Set cell click handler
         this.initGame();
     }
 
     async initGame() {
+        if (this.isGameInProgress) {
+            // If a game is in progress, do not prompt for new settings
+            return;
+        }
+
         const settings = await this.view.getGameSettings();
         this.model.size = settings.size;
         this.model.winCondition = settings.winCondition;
@@ -32,24 +40,23 @@ class Controller {
         this.model.loadGame();
         this.render();
         this.isAiMode = settings.mode === 'ai';
-        
-        // Set the cell click handler
-        this.view.setCellClickHandler(this.handleCellClick.bind(this));
-        
+        this.isGameInProgress = true; // Set game in progress
         this.updateScoreboard();
     }
 
     handleCellClick(row, col) {
+        if (!this.isGameInProgress) return; // Prevent clicks if no game is in progress
+
         const message = this.model.makeMove(row, col);
         if (message) {
-            const duration = Date.now() - this.model.startTime; // Zaznamenání doby trvání hry
+            const duration = Date.now() - this.model.startTime; // Record game duration
             const score = {
                 player: this.model.currentPlayer,
                 duration: duration,
                 size: this.model.size,
                 winCondition: this.model.winCondition
             };
-            this.scoreboard.addScore(score); // Uložení skóre
+            this.scoreboard.addScore(score); // Save score
             this.model.saveGame();
             this.view.showMessage(message);
             this.updateScoreboard();
@@ -59,12 +66,20 @@ class Controller {
             }
         }
         this.render();
+
+        // Check if the game is over
+        if (this.model.gameOver) {
+            this.isGameInProgress = false; // Clear game in progress
+            this.view.updateScoreboard(this.scoreboard.getScores()); // Show completion in scoreboard
+        }
     }
 
     handleReset() {
         this.model.reset();
         this.model.saveGame();
-        this.render();
+        this.isGameInProgress = false; // Reset game state
+        this.view.renderBoard(this.model.board); // Re-render the board
+        this.view.updateStats(this.model.stats); // Update stats
     }
 
     render() {
@@ -78,7 +93,7 @@ class Controller {
     }
 }
 
-// Inicializace aplikace
+// Initialize application
 const model = new TicTacToe();
 const view = new View();
 const controller = new Controller(model, view);
