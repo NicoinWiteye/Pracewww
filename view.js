@@ -5,6 +5,13 @@ class View {
         this.resetButton = document.getElementById('reset');
     }
 
+    async getGameSettings() {
+        const size = parseInt(prompt("Zadejte velikost hracího pole (např. 3):")) || 3;
+        const winCondition = parseInt(prompt("Zadejte počet symbolů potřebných pro výhru (např. 3):")) || 3;
+        const mode = prompt("Chcete hrát proti AI nebo proti hráči? (zadejte 'AI' nebo 'hráč')").toLowerCase();
+        return { size, winCondition, mode };
+    }
+
     renderBoard(board) {
         this.boardElement.innerHTML = '';
         board.forEach((row, rowIndex) => {
