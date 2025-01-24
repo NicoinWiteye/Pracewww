@@ -22,24 +22,20 @@ class Controller {
 
         this.view.setResetHandler(this.handleReset.bind(this)); // Set reset handler
         this.view.setCellClickHandler(this.handleCellClick.bind(this)); // Set cell click handler
-        this.initGame();
+        this.view.startButton.addEventListener('click', () => this.startNewGame()); // Start new game
     }
 
-    async initGame() {
-        if (this.isGameInProgress) {
-            // If a game is in progress, do not prompt for new settings
-            return;
-        }
+    startNewGame() {
+        const size = parseInt(this.view.sizeInput.value);
+        const winCondition = parseInt(this.view.winConditionInput.value);
+        const mode = this.view.gameTypeInput.value;
 
-        const settings = await this.view.getGameSettings();
-        this.model.size = settings.size;
-        this.model.winCondition = settings.winCondition;
+        this.model.size = size;
+        this.model.winCondition = winCondition;
         this.model.reset();
         this.view.renderBoard(this.model.board);
         this.view.updateStats(this.model.stats);
-        this.model.loadGame();
-        this.render();
-        this.isAiMode = settings.mode === 'ai';
+        this.isAiMode = mode === 'playerVsAI';
         this.isGameInProgress = true; // Set game in progress
         this.updateScoreboard();
     }
@@ -70,7 +66,7 @@ class Controller {
         // Check if the game is over
         if (this.model.gameOver) {
             this.isGameInProgress = false; // Clear game in progress
-            this.view.updateScoreboard(this.scoreboard.getScores()); // Show completion in scoreboard
+            this.updateScoreboard();
         }
     }
 

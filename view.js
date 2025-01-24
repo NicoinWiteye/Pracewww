@@ -3,14 +3,29 @@ class View {
         this.boardElement = document.getElementById('board');
         this.statsElement = document.getElementById('stats');
         this.resetButton = document.getElementById('reset');
-        this.scoreboardElement = document.getElementById('scoreboard');
+        this.startButton = document.getElementById('startGame');
+        this.sizeInput = document.getElementById('size');
+        this.winConditionInput = document.getElementById('winCondition');
+        this.gameTypeInput = document.getElementById('gameType');
+        this.scoreboardElement = document.getElementById('scoreboard'); // Initialize scoreboardElement
+
+        this.startButton.addEventListener('click', () => this.startGame());
     }
 
-    async getGameSettings() {
-        const size = parseInt(prompt("Zadejte velikost hracího pole (např. 3):")) || 3;
-        const winCondition = parseInt(prompt("Zadejte počet symbolů potřebných pro výhru (např. 3):")) || 3;
-        const mode = prompt("Chcete hrát proti AI nebo proti hráči? (zadejte 'AI' nebo 'hráč')").toLowerCase();
-        return { size, winCondition, mode };
+    startGame() {
+        const size = parseInt(this.sizeInput.value);
+        const winCondition = parseInt(this.winConditionInput.value);
+        const mode = this.gameTypeInput.value;
+
+        // Logic to start the game with the provided parameters
+        console.log(`Starting game with size: ${size}, win condition: ${winCondition}, mode: ${mode}`);
+
+        // Initialize the game model and view based on the parameters
+        this.model.size = size;
+        this.model.winCondition = winCondition;
+        this.model.reset();
+        this.renderBoard(this.model.board);
+        this.updateStats(this.model.stats);
     }
 
     renderBoard(board) {
