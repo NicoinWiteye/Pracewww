@@ -22,22 +22,40 @@ class Controller {
 
         this.view.setResetHandler(this.handleReset.bind(this)); // Set reset handler
         this.view.setCellClickHandler(this.handleCellClick.bind(this)); // Set cell click handler
+        this.loadGame(); // Load game state if exists
+        this.updateScoreboard();
+
         this.view.startButton.addEventListener('click', () => this.startNewGame()); // Start new game
     }
 
+    loadGame() {
+        this.model.loadGame(); // Load the game state from local storage
+        this.view.startGame(this.model);
+        if (this.model.board) {
+            this.view.renderBoard(this.model.board); // Render the loaded board
+            this.view.updateStats(this.model.stats); // Update stats
+            this.isGameInProgress = true; // Set game in progress
+        }
+    }
+
     startNewGame() {
+        this.model.reset();
+        const model = new TicTacToe();
         const size = parseInt(this.view.sizeInput.value);
         const winCondition = parseInt(this.view.winConditionInput.value);
         const mode = this.view.gameTypeInput.value;
 
         this.model.size = size;
         this.model.winCondition = winCondition;
-        this.model.reset();
+        
+        this.view.startGame(this.model);
         this.view.renderBoard(this.model.board);
         this.view.updateStats(this.model.stats);
+        
         this.isAiMode = mode === 'playerVsAI';
         this.isGameInProgress = true; // Set game in progress
         this.updateScoreboard();
+        
     }
 
     handleCellClick(row, col) {
@@ -53,7 +71,7 @@ class Controller {
                 winCondition: this.model.winCondition
             };
             this.scoreboard.addScore(score); // Save score
-            this.model.saveGame();
+            this.model.saveGame(); // Save game state after each move
             this.view.showMessage(message);
             this.updateScoreboard();
             if (this.isAiMode && !this.model.gameOver) {
@@ -61,11 +79,13 @@ class Controller {
                 this.render();
             }
         }
+        this.model.saveGame();
         this.render();
 
         // Check if the game is over
         if (this.model.gameOver) {
             this.isGameInProgress = false; // Clear game in progress
+            localStorage.removeItem('ticTacToeGame'); // Clear game state on win
             this.updateScoreboard();
         }
     }
