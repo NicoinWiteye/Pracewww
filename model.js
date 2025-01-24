@@ -122,17 +122,55 @@ class TicTacToe {
     }
 
     aiMove() {
+        // 1. AI zkontroluje, zda může vyhrát aktuálním tahem
+        for (let row = 0; row < this.size; row++) {
+            for (let col = 0; col < this.size; col++) {
+                if (!this.board[row][col]) { // Ověří, zda je pole prázdné
+                    this.board[row][col] = this.currentPlayer; // Dočasně položí tah
+                    if (this.checkWin()) {
+                        return; // AI vyhrála
+                    }
+                    this.board[row][col] = null; // Vrátí tah zpět
+                }
+            }
+        }
+    
+        // 2. AI zkontroluje, zda hráč nemůže vyhrát v příštím tahu, a blokuje ho
+        const opponent = this.currentPlayer === 'X' ? 'O' : 'X';
+        for (let row = 0; row < this.size; row++) {
+            for (let col = 0; col < this.size; col++) {
+                if (!this.board[row][col]) { // Ověří, zda je pole prázdné
+                    this.board[row][col] = opponent; // Dočasně položí tah hráče
+                    if (this.checkWin()) {
+                        this.board[row][col] = this.currentPlayer; // Blokuje tah hráče
+                        return;
+                    }
+                    this.board[row][col] = null; // Vrátí tah zpět
+                }
+            }
+        }
+    
+        // 3. Pokud AI nemůže vyhrát ani blokovat, zvolí strategicky nejlepší tah
+        const center = Math.floor(this.size / 2);
+        if (!this.board[center][center]) { // Zvolí střed, pokud je dostupný
+            this.board[center][center] = this.currentPlayer;
+            return;
+        }
+    
+        // 4. Pokud není střed volný, AI vybere náhodné dostupné políčko
         const emptyCells = [];
         for (let row = 0; row < this.size; row++) {
             for (let col = 0; col < this.size; col++) {
-                if (!this.board[row][col]) {
+                if (!this.board[row][col]) { // Přidá pouze prázdné buňky
                     emptyCells.push({ row, col });
                 }
             }
         }
         if (emptyCells.length > 0) {
             const { row, col } = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-            this.makeMove(row, col);
+            this.board[row][col] = this.currentPlayer; // AI provede tah na náhodné prázdné pole
         }
     }
+    
+    
 }

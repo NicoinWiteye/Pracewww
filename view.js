@@ -7,6 +7,7 @@ class View {
         this.sizeInput = document.getElementById('size');
         this.winConditionInput = document.getElementById('winCondition');
         this.gameTypeInput = document.getElementById('gameType');
+        this.aiDifficultyInput = document.getElementById('aiDifficulty');
         this.scoreboardElement = document.getElementById('scoreboard'); 
 
         this.startButton.addEventListener('click', () => this.startGame(this.model)); // Pass model to startGame
