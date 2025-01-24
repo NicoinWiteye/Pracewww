@@ -40,7 +40,6 @@ class Controller {
 
     startNewGame() {
         this.model.reset();
-        const model = new TicTacToe();
         const size = parseInt(this.view.sizeInput.value);
         const winCondition = parseInt(this.view.winConditionInput.value);
         const mode = this.view.gameTypeInput.value;
@@ -55,7 +54,6 @@ class Controller {
         this.isAiMode = mode === 'playerVsAI';
         this.isGameInProgress = true; // Set game in progress
         this.updateScoreboard();
-        
     }
 
     handleCellClick(row, col) {
@@ -64,15 +62,27 @@ class Controller {
         const message = this.model.makeMove(row, col);
         if (message) {
             const duration = Date.now() - this.model.startTime; // Record game duration
+            let playerNickname = '';
+
+            if (this.model.gameOver) {
+                if (message.includes("vyhrál")) {
+                    alert(message);
+                    playerNickname = prompt("Jméno hráče: ");
+                } else {
+                    alert(message);
+                    playerNickname = "Remíza"; // Set nickname to "Remíza" for draws
+                }
+            }
+
             const score = {
-                player: this.model.currentPlayer,
+                player: playerNickname || this.model.currentPlayer,
                 duration: duration,
                 size: this.model.size,
                 winCondition: this.model.winCondition
             };
             this.scoreboard.addScore(score); // Save score
             this.model.saveGame(); // Save game state after each move
-            this.view.showMessage(message);
+            //this.view.showMessage(message);
             this.updateScoreboard();
             if (this.isAiMode && !this.model.gameOver) {
                 this.model.aiMove();

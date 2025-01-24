@@ -15,7 +15,7 @@ class TicTacToe {
             if (this.checkWin()) {
                 this.stats[this.currentPlayer]++;
                 this.gameOver = true;
-                return `${this.currentPlayer} vyhrál!`;
+                return `${this.currentPlayer} vyhrál!`; // Prompt for nickname
             } else if (this.board.flat().every(cell => cell)) {
                 this.gameOver = true;
                 return 'Remíza!';

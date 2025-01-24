@@ -15,6 +15,9 @@ body {
     display: grid;
     /*grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));  Adjusts based on size */
     gap: 5px;
+    align-content: center;
+    align-self: center;
+    
 }
 
 .cell {
