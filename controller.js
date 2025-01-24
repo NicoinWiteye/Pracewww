@@ -19,6 +19,7 @@ class Controller {
         this.view = view;
         this.scoreboard = new Scoreboard();
         this.isGameInProgress = false; // Track if a game is in progress
+        this.isAiMode = false; // Track if AI mode is active
 
         this.view.setResetHandler(this.handleReset.bind(this)); // Set reset handler
         this.view.setCellClickHandler(this.handleCellClick.bind(this)); // Set cell click handler
@@ -47,62 +48,74 @@ class Controller {
         this.model.size = size;
         this.model.winCondition = winCondition;
         
+        this.isAiMode = mode === 'playerVsAI'; // Set AI mode based on selection
+        
         this.view.startGame(this.model);
         this.view.renderBoard(this.model.board);
         this.view.updateStats(this.model.stats);
-        
-        this.isAiMode = mode === 'playerVsAI';
+
         this.isGameInProgress = true; // Set game in progress
+        this.model.saveGame(); // Save the initial state of the game
         this.updateScoreboard();
+
+        if (this.isAiMode && this.model.currentPlayer === 'O') {
+            this.model.aiMove(); // AI makes the first move if applicable
+            this.render();
+        }
     }
 
     handleCellClick(row, col) {
-        if (!this.isGameInProgress) return; // Prevent clicks if no game is in progress
+        if (!this.isGameInProgress || this.model.gameOver) return; // Prevent clicks if no game is in progress or game is over
+
+        if (this.model.board[row][col]) return; // Prevent clicking on an already occupied cell
 
         const message = this.model.makeMove(row, col);
-        if (message) {
-            const duration = Date.now() - this.model.startTime; // Record game duration
-            let playerNickname = '';
-
-            if (this.model.gameOver) {
-                if (message.includes("vyhrál")) {
-                    alert(message);
-                    playerNickname = prompt("Jméno hráče: ");
-                } else {
-                    alert(message);
-                    playerNickname = "Remíza"; // Set nickname to "Remíza" for draws
-                }
-            }
-
-            const score = {
-                player: playerNickname || this.model.currentPlayer,
-                duration: duration,
-                size: this.model.size,
-                winCondition: this.model.winCondition
-            };
-            this.scoreboard.addScore(score); // Save score
-            this.model.saveGame(); // Save game state after each move
-            //this.view.showMessage(message);
-            this.updateScoreboard();
-            if (this.isAiMode && !this.model.gameOver) {
-                this.model.aiMove();
-                this.render();
-            }
-        }
-        this.model.saveGame();
+        this.model.saveGame(); // Save the state of the game after a move
         this.render();
 
-        // Check if the game is over
-        if (this.model.gameOver) {
-            this.isGameInProgress = false; // Clear game in progress
-            localStorage.removeItem('ticTacToeGame'); // Clear game state on win
-            this.updateScoreboard();
+        if (message) {
+            this.handleGameOver(message);
+            return;
         }
+
+        if (this.isAiMode && !this.model.gameOver) {
+            this.model.aiMove(); // AI makes its move after the player
+            this.model.saveGame(); // Save the state after AI's move
+            this.render();
+
+            if (this.model.gameOver) {
+                this.handleGameOver(`${this.model.currentPlayer} vyhrál!`);
+            }
+        }
+    }
+
+    handleGameOver(message) {
+        const duration = Date.now() - this.model.startTime;
+        let playerNickname = '';
+
+        if (message.includes('vyhrál')) {
+            alert(message);
+            playerNickname = prompt("Zadejte jméno hráče: ") || this.model.currentPlayer;
+        } else {
+            alert(message);
+            playerNickname = "Remíza"; // Set nickname to "Remíza" for draws
+        }
+
+        const score = {
+            player: playerNickname,
+            duration: duration,
+            size: this.model.size,
+            winCondition: this.model.winCondition
+        };
+
+        this.scoreboard.addScore(score);
+        this.isGameInProgress = false;
+        this.updateScoreboard();
     }
 
     handleReset() {
         this.model.reset();
-        this.model.saveGame();
+        this.model.saveGame(); // Save the reset state
         this.isGameInProgress = false; // Reset game state
         this.view.renderBoard(this.model.board); // Re-render the board
         this.view.updateStats(this.model.stats); // Update stats
