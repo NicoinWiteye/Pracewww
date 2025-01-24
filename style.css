@@ -3,6 +3,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    align-items: center;
+    align-content: center;
     height: 100vh;
     background-color: #f0f0f0;
 }
@@ -17,6 +19,7 @@ body {
     gap: 5px;
     align-content: center;
     align-self: center;
+    padding-left: 25%;
     
 }
 

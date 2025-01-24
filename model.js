@@ -27,14 +27,65 @@ class TicTacToe {
     }
 
     checkWin() {
-        const winConditions = [
-            ...this.board, // rows
-            ...this.board[0].map((_, colIndex) => this.board.map(row => row[colIndex])), // columns
-            this.board.map((row, index) => row[index]), // main diagonal
-            this.board.map((row, index) => row[this.size - 1 - index]) // anti diagonal
+        const directions = [
+            { x: 1, y: 0 }, // Horizontální
+            { x: 0, y: 1 }, // Vertikální
+            { x: 1, y: 1 }, // Diagonála vlevo-dolů
+            { x: 1, y: -1 } // Diagonála vlevo-nahoru
         ];
+    
+        for (let row = 0; row < this.size; row++) {
+            for (let col = 0; col < this.size; col++) {
+                if (this.board[row][col] === this.currentPlayer) {
+                    for (const { x, y } of directions) {
+                        if (this.checkDirection(row, col, x, y)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    
+    checkDirection(startRow, startCol, deltaX, deltaY) {
+        let count = 0;
+        for (let i = 0; i < this.winCondition; i++) {
+            const row = startRow + i * deltaY;
+            const col = startCol + i * deltaX;
+    
+            if (
+                row >= 0 &&
+                row < this.size &&
+                col >= 0 &&
+                col < this.size &&
+                this.board[row][col] === this.currentPlayer
+            ) {
+                count++;
+                if (count === this.winCondition) {
+                    return true;
+                }
+            } else {
+                break;
+            }
+        }
+        return false;
+    }
+    
 
-        return winConditions.some(condition => condition.filter(cell => cell).length >= this.winCondition && condition.every(cell => cell === this.currentPlayer));
+    checkLine(line) {
+        let count = 0;
+        for (let cell of line) {
+            if (cell === this.currentPlayer) {
+                count++;
+                if (count === this.winCondition) {
+                    return true;
+                }
+            } else {
+                count = 0; // Reset count if the sequence is broken
+            }
+        }
+        return false;
     }
 
     reset() {
