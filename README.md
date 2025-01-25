@@ -22,7 +22,6 @@ Webová aplikace Tic Tac Toe umožňuje uživatelům hrát klasickou hru piškvo
     Player --> (Hraní hry)
     Player --> (Ukládání skóre)
     Player --> (Obnova rozehrané hry)
-    Player --> (Přizpůsobení AI obtížnosti)
 ```
 
 ### Uživatelské role a oprávnění
