@@ -16,12 +16,13 @@ Webová aplikace Tic Tac Toe umožňuje uživatelům hrát klasickou hru piškvo
 - Obnova rozehrané hry.
 
 ```mermaid
-usecaseDiagram
-  actor Hráč
-  Hráč --> (Volba nastavení hry)
-  Hráč --> (Hraní hry)
-  Hráč --> (Ukládání skóre)
-  Hráč --> (Obnova rozehrané hry)
+  usecaseDiagram
+    actor Hráč as Player
+    Player --> (Volba nastavení hry)
+    Player --> (Hraní hry)
+    Player --> (Ukládání skóre)
+    Player --> (Obnova rozehrané hry)
+    Player --> (Přizpůsobení AI obtížnosti)
 ```
 
 ### Uživatelské role a oprávnění
@@ -41,7 +42,6 @@ usecaseDiagram
 - Dropdown pro volbu režimu hry (Hráč vs. Hráč, Hráč vs. AI).
 - Hrací desku.
 - Tlačítko pro spuštění hry.
-- Tlačítko pro resetování hry.
 - Panel pro zobrazení skóre.
 
 **Grafické prvky:**
@@ -79,7 +79,7 @@ erDiagram
 
 ### Popis architektury
 
-Aplikace je strukturována podle modelu MVC (Model-View-Controller):
+Aplikace je strukturována podle modelu MVC:
 
 1. **Model (model.js):**
 
@@ -140,8 +140,3 @@ classDiagram
 2. **LocalStorage:** Ukládání stavu hry a skóre.
 3. **Git:** Dokumentace vývoje aplikace.
 4. **Framework:** Aplikace nepoužívá externí framework, vše je implementováno nativně pro přehlednost.
-
----
-
-Tímto dokumentem je připravena kompletní specifikace aplikace Tic Tac Toe pro zápočtovou práci.
-
