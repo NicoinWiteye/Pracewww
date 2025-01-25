@@ -7,7 +7,7 @@ class TicTacToe {
         this.currentPlayer = 'X';
         this.stats = { X: 0, O: 0 };
         this.gameOver = false;
-        this.startTime = Date.now(); // Inicializace času hry
+        this.startTime = Date.now(); 
     }
 
     makeMove(row, col) {
@@ -29,10 +29,10 @@ class TicTacToe {
 
     checkWin() {
         const directions = [
-            { x: 1, y: 0 }, // Horizontální
-            { x: 0, y: 1 }, // Vertikální
-            { x: 1, y: 1 }, // Diagonála vlevo-dolů
-            { x: 1, y: -1 } // Diagonála vlevo-nahoru
+            { x: 1, y: 0 }, 
+            { x: 0, y: 1 }, 
+            { x: 1, y: 1 }, 
+            { x: 1, y: -1 } 
         ];
     
         for (let row = 0; row < this.size; row++) {
@@ -93,7 +93,7 @@ class TicTacToe {
         this.board = Array.from({ length: this.size }, () => Array(this.size).fill(null));
         this.currentPlayer = 'X';
         this.gameOver = false;
-        this.startTime = Date.now(); // Resetování času hry
+        this.startTime = Date.now(); 
     }
 
     saveGame() {
@@ -118,7 +118,7 @@ class TicTacToe {
             this.gameOver = gameState.gameOver;
             this.size = gameState.size;
             this.winCondition = gameState.winCondition;
-            this.startTime = gameState.startTime || Date.now(); // Načtení času hry
+            this.startTime = gameState.startTime || Date.now(); // game time load
         }
     }
 
@@ -130,9 +130,9 @@ class TicTacToe {
                     this.board[row][col] = this.currentPlayer; // Simulate AI move
                     if (this.checkWin()) {
                         this.gameOver = true; // End the game if AI wins
-                        return; // AI wins
+                        return; 
                     }
-                    this.board[row][col] = null; // Undo the move
+                    this.board[row][col] = null; // Undo
                 }
             }
         }
@@ -144,10 +144,10 @@ class TicTacToe {
                 if (!this.board[row][col]) {
                     this.board[row][col] = opponent; // Simulate opponent's move
                     if (this.checkWin()) {
-                        this.board[row][col] = this.currentPlayer; // Block opponent
+                        this.board[row][col] = this.currentPlayer; // block
                         return;
                     }
-                    this.board[row][col] = null; // Undo the move
+                    this.board[row][col] = null; // Undo
                 }
             }
         }

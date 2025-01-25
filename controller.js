@@ -19,12 +19,12 @@ class Controller {
         this.model = model;
         this.view = view;
         this.scoreboard = new Scoreboard();
-        this.isGameInProgress = false; // Track if a game is in progress
-        this.isAiMode = false; // Track if AI mode is active
+        this.isGameInProgress = false; 
+        this.isAiMode = false; 
 
         this.view.setResetHandler(this.handleReset.bind(this)); // Set reset handler
         this.view.setCellClickHandler(this.handleCellClick.bind(this)); // Set cell click handler
-        this.loadGame(); // Load game state if exists
+        this.loadGame(); 
         this.updateScoreboard();
 
         this.view.startButton.addEventListener('click', () => this.startNewGame()); // Start new game
@@ -133,7 +133,7 @@ class Controller {
     }
 
     handleReset() {
-        this.model.reset();
+        this.model.reset(); // Skibidi resets
         this.model.saveGame(); // Save the reset state
         this.isGameInProgress = false; // Reset game state
         this.view.renderBoard(this.model.board); // Re-render the board
