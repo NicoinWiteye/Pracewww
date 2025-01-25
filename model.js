@@ -123,63 +123,58 @@ class TicTacToe {
     }
 
     aiMove() {
-
-            //this.currentPlayer = 'O';
-
-        
-        // 1. AI zkontroluje, zda může vyhrát aktuálním tahem
+        // 1. AI checks if it can win in the current move
         for (let row = 0; row < this.size; row++) {
             for (let col = 0; col < this.size; col++) {
-                if (!this.board[row][col]) { // Ověří, zda je pole prázdné
-                    this.board[row][col] = this.currentPlayer; // Dočasně položí tah
+                if (!this.board[row][col]) {
+                    this.board[row][col] = this.currentPlayer; // Simulate AI move
                     if (this.checkWin()) {
-                        return; // AI vyhrála
+                        this.gameOver = true; // End the game if AI wins
+                        return; // AI wins
                     }
-                    this.board[row][col] = null; // Vrátí tah zpět
+                    this.board[row][col] = null; // Undo the move
                 }
             }
         }
-        
     
-        // 2. AI zkontroluje, zda hráč nemůže vyhrát v příštím tahu, a blokuje ho
+        // 2. AI checks if it needs to block the opponent
         const opponent = this.currentPlayer === 'X' ? 'O' : 'X';
         for (let row = 0; row < this.size; row++) {
             for (let col = 0; col < this.size; col++) {
-                if (!this.board[row][col]) { // Ověří, zda je pole prázdné
-                    this.board[row][col] = opponent; // Dočasně položí tah hráče
+                if (!this.board[row][col]) {
+                    this.board[row][col] = opponent; // Simulate opponent's move
                     if (this.checkWin()) {
-                        this.board[row][col] = this.currentPlayer; // Blokuje tah hráče
+                        this.board[row][col] = this.currentPlayer; // Block opponent
                         return;
                     }
-                    this.board[row][col] = null; // Vrátí tah zpět
+                    this.board[row][col] = null; // Undo the move
                 }
             }
         }
     
-        // 3. Pokud AI nemůže vyhrát ani blokovat, zvolí strategicky nejlepší tah
+        // 3. AI chooses the center if available
         const center = Math.floor(this.size / 2);
-        if (!this.board[center][center]) { // Zvolí střed, pokud je dostupný
+        if (!this.board[center][center]) {
             this.board[center][center] = this.currentPlayer;
             return;
         }
     
-        // 4. Pokud není střed volný, AI vybere náhodné dostupné políčko
+        // 4. AI picks a random empty cell
         const emptyCells = [];
         for (let row = 0; row < this.size; row++) {
             for (let col = 0; col < this.size; col++) {
-                if (!this.board[row][col]) { // Přidá pouze prázdné buňky
+                if (!this.board[row][col]) {
                     emptyCells.push({ row, col });
                 }
             }
         }
+    
         if (emptyCells.length > 0) {
-            
             const { row, col } = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-            this.board[row][col] = this.currentPlayer; // AI provede tah na náhodné prázdné pole
+            this.board[row][col] = this.currentPlayer;
         }
-
-        //this.currentPlayer = 'X';
     }
+    
     
     
 }

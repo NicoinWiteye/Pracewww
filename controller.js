@@ -72,7 +72,7 @@ class Controller {
         if (!this.isGameInProgress || this.model.gameOver) return; // Prevent clicks if no game is in progress or game is over
 
         if (this.model.board[row][col]) return; // Prevent clicking on an already occupied cell
-
+        
         if (this.isAiMode){
             this.model.currentPlayer = 'X';
             this.first = true;
