@@ -1,5 +1,6 @@
 class TicTacToe {
     constructor(size = 3, winCondition = 3) {
+        this.first = false;
         this.size = size;
         this.winCondition = winCondition;
         this.board = Array.from({ length: size }, () => Array(size).fill(null));
@@ -71,7 +72,7 @@ class TicTacToe {
         }
         return false;
     }
-    
+
 
     checkLine(line) {
         let count = 0;
@@ -122,6 +123,10 @@ class TicTacToe {
     }
 
     aiMove() {
+
+            //this.currentPlayer = 'O';
+
+        
         // 1. AI zkontroluje, zda může vyhrát aktuálním tahem
         for (let row = 0; row < this.size; row++) {
             for (let col = 0; col < this.size; col++) {
@@ -134,6 +139,7 @@ class TicTacToe {
                 }
             }
         }
+        
     
         // 2. AI zkontroluje, zda hráč nemůže vyhrát v příštím tahu, a blokuje ho
         const opponent = this.currentPlayer === 'X' ? 'O' : 'X';
@@ -167,9 +173,12 @@ class TicTacToe {
             }
         }
         if (emptyCells.length > 0) {
+            
             const { row, col } = emptyCells[Math.floor(Math.random() * emptyCells.length)];
             this.board[row][col] = this.currentPlayer; // AI provede tah na náhodné prázdné pole
         }
+
+        //this.currentPlayer = 'X';
     }
     
     

@@ -1,6 +1,7 @@
 class Scoreboard {
     constructor() {
         this.scores = JSON.parse(localStorage.getItem('ticTacToeScores')) || [];
+        this.first = false;
     }
 
     addScore(score) {
@@ -57,10 +58,13 @@ class Controller {
         this.isGameInProgress = true; // Set game in progress
         this.model.saveGame(); // Save the initial state of the game
         this.updateScoreboard();
+        this.render();
+        this.currentPlayer = 'X';
 
         if (this.isAiMode && this.model.currentPlayer === 'O') {
             this.model.aiMove(); // AI makes the first move if applicable
             this.render();
+            this.currentPlayer = 'X';
         }
     }
 
@@ -69,6 +73,10 @@ class Controller {
 
         if (this.model.board[row][col]) return; // Prevent clicking on an already occupied cell
 
+        if (this.isAiMode){
+            this.model.currentPlayer = 'X';
+            this.first = true;
+        }
         const message = this.model.makeMove(row, col);
         this.model.saveGame(); // Save the state of the game after a move
         this.render();
@@ -78,10 +86,21 @@ class Controller {
             return;
         }
 
+        if (this.model.gameOver) {
+            this.handleGameOver(`${this.model.currentPlayer} vyhrál!`);
+        }
+
         if (this.isAiMode && !this.model.gameOver) {
-            this.model.aiMove(); // AI makes its move after the player
+             // AI makes its move after the player
             this.model.saveGame(); // Save the state after AI's move
             this.render();
+            
+            this.model.aiMove();
+            
+            this.model.saveGame();
+             // Save the state after AI's move
+            this.render();
+            
 
             if (this.model.gameOver) {
                 this.handleGameOver(`${this.model.currentPlayer} vyhrál!`);

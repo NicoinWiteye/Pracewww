@@ -3,8 +3,6 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    align-items: center;
-    align-content: center;
     height: 100vh;
     background-color: #f0f0f0;
 }
@@ -15,12 +13,11 @@ body {
 
 #board {
     display: grid;
-    /*grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));  Adjusts based on size */
     gap: 5px;
     align-content: center;
     align-self: center;
-    padding-left: 25%;
-    
+    width: 500px; 
+    margin: auto; 
 }
 
 .cell {

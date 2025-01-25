@@ -10,6 +10,9 @@ class View {
         this.aiDifficultyInput = document.getElementById('aiDifficulty');
         this.scoreboardElement = document.getElementById('scoreboard'); 
 
+        // Instantiate the TicTacToe model
+        this.model = new TicTacToe();
+
         this.startButton.addEventListener('click', () => this.startGame(this.model)); // Pass model to startGame
     }
 
@@ -28,6 +31,7 @@ class View {
         //model.reset();
         this.renderBoard(model.board);
         this.updateStats(model.stats);
+        
     }
 
     renderBoard(board) {
